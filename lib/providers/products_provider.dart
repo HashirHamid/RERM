@@ -21,6 +21,7 @@ class ad with ChangeNotifier {
   String? type;
   bool? owned = false;
   List? rating = [];
+  List? agreement = [];
 
   var adid;
   List<ad> _items = [];
@@ -98,6 +99,10 @@ class ad with ChangeNotifier {
     return [..._filtered];
   }
 
+  String get image1 {
+    return this.agreement![0]['image'];
+  }
+
   ad findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
@@ -154,12 +159,45 @@ class ad with ChangeNotifier {
       extractedData = extractedData as Map<String, dynamic>;
       final List<Owned> list = [];
       extractedData.forEach((key, doc) {
-        list.add(Owned(id: key, ad: doc['ad'], uid: doc['uid']));
+        list.add(Owned(
+            id: key, ad: doc['ad'], uid: doc['uid'], months: doc['payments']));
       });
       _filtered = list;
       adid = _filtered[0].ad;
 
       // .where((element) => element[0]['uid'] == this.userId).toList();
+      notifyListeners();
+    } catch (e) {
+      throw (e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getAgreement() async {
+    const uri = 'https://rsms-3e512-default-rtdb.firebaseio.com/Agreement.json';
+    final url = Uri.parse(uri);
+    try {
+      final response = await http.get(url);
+      var extractedData = json.decode(response.body);
+      if (extractedData == null) {
+        return;
+      }
+      extractedData = extractedData as Map<String, dynamic>;
+      List list = [];
+      extractedData.forEach((key, doc) {
+        list.add({
+          'url': doc['url'],
+          'renteeId': doc['renteeId'],
+          'renterId': doc['renterId']
+        });
+      });
+      list = list.firstWhere(
+        (element) =>
+            element['renteeId'] == this.userId ||
+            element['renterId'] == this.userId,
+      );
+      this.agreement = list;
+
       notifyListeners();
     } catch (e) {
       throw (e);
@@ -186,7 +224,11 @@ class ad with ChangeNotifier {
           'price': ads.price,
           'state': ads.state,
           'city': ads.city,
-          'type': ads.type
+          'type': ads.type,
+          'owned': false,
+          'ratings': [
+            {'review': '', "stars": 0.0}
+          ]
         }),
       )
           .then((value) {
@@ -291,13 +333,62 @@ class ad with ChangeNotifier {
         _filtered.indexWhere((element) => element.id == id);
     Owned? existingProduct = _filtered[existingProductIndex];
     _filtered.removeAt(existingProductIndex);
-    notifyListeners();
-    final response = await http.delete(Uri.parse(url));
+
+    List<Map> rentees = [];
+    final response = await http.delete(Uri.parse(url)).then((value) async {
+      const uri1 = 'https://rsms-3e512-default-rtdb.firebaseio.com/rentee.json';
+      final url1 = Uri.parse(uri1);
+      try {
+        final response = await http.get(url1);
+        var extractedData = json.decode(response.body);
+        if (extractedData == null) {
+          return;
+        }
+        extractedData = extractedData as Map<String, dynamic>;
+        final List<Map> list = [];
+        extractedData.forEach((key, doc) {
+          list.add({
+            'key': key,
+            'id': doc['id'],
+            "email": doc['email'],
+            'password': doc["password"],
+            "cnic": doc['cnic'],
+            "number": doc['number'],
+            "owned": doc['owned']
+          });
+        });
+        rentees = list;
+      } catch (e) {}
+    }).then((value) async {
+      var rentee = rentees.firstWhere(
+        (element) => element['id'] == existingProduct.uid,
+      );
+      final uri2 =
+          'https://rsms-3e512-default-rtdb.firebaseio.com/rentee/${rentee['key']}.json';
+      final url2 = Uri.parse(uri2);
+      try {
+        final response = await http.patch(url2,
+            body: json.encode({
+              'id': rentee['id'],
+              "email": rentee['email'],
+              'password': rentee["password"],
+              "cnic": rentee['cnic'],
+              "number": rentee['number'],
+              "owned": false
+            }));
+
+        // .where((element) => element[0]['uid'] == this.userId).toList();
+        notifyListeners();
+      } catch (e) {
+        throw (e);
+      }
+    });
     if (response.statusCode >= 400) {
       _filtered.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException('Could not delete product.');
     }
-    existingProduct = null;
+
+    notifyListeners();
   }
 }

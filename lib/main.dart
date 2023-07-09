@@ -7,8 +7,6 @@ import 'package:rsms/providers/reports.dart';
 import 'package:rsms/screens/ad-details-screen.dart';
 import 'package:rsms/screens/list-screen.dart';
 import 'package:rsms/screens/post-ad.dart';
-import 'package:rsms/screens/rate_house.dart';
-import 'package:rsms/screens/reports.dart';
 import 'package:rsms/screens/search-screen.dart';
 import 'package:rsms/screens/signup-screen.dart';
 import 'package:rsms/screens/tab_screen.dart';
@@ -72,36 +70,3 @@ class MyApp extends StatelessWidget {
                 )));
   }
 }
-
-// class MyHomePage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Rate House'),
-//         ),
-//         body: 
-//         Center(
-//           child: OutlinedButton(
-//             onPressed: () {
-//               showModalBottomSheet(
-//                 context: context,
-//                 backgroundColor: Colors.white,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.vertical(
-//                     top: Radius.circular(16.0),
-//                   ),
-//                 ),
-//                 builder: (BuildContext context) {
-//                   return RateHouseModal();
-//                 },
-//               );
-//             },
-//             child: Text('Rate This House'),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

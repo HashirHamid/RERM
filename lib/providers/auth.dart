@@ -81,7 +81,9 @@ class Auth with ChangeNotifier {
           'email': email,
           'password': password,
           'cnic': cnic,
-          'number': number
+          'id': this.userId,
+          'number': number,
+          'owned': false
         }),
       );
       notifyListeners();
@@ -100,7 +102,8 @@ class Auth with ChangeNotifier {
           'email': email,
           'password': password,
           'cnic': cnic,
-          'number': number
+          'number': number,
+          'id': userId,
         }),
       );
       notifyListeners();

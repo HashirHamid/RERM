@@ -5,6 +5,8 @@ import 'package:rsms/screens/dashboard_screen.dart';
 import 'package:rsms/screens/post-ad.dart';
 import 'package:rsms/screens/reports.dart';
 
+import '../screens/agreement.dart';
+
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,10 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.handshake),
             title: Text('View agreement'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Agreement()));
+            },
           ),
           auth.rentee == false
               ? Container()

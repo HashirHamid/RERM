@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rsms/providers/products_provider.dart';
+import 'package:rsms/screens/payment.dart';
 import 'package:rsms/screens/rate_house.dart';
 
 import 'dialogbox.dart';
@@ -50,14 +51,16 @@ class UserAddItem extends StatelessWidget {
                   builder: (BuildContext context) {
                     return RateHouseModal(id);
                   },
-                );
-                // .then((value) =>
-                // Provider.of<ad>(context, listen: false).leaveHouse(delid));
+                ).then((value) =>
+                    Provider.of<ad>(context, listen: false).leaveHouse(delid));
               } else {
                 // Perform action when user selects "No" or dismisses the dialog
               }
             } else {
-              Navigator.of(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Payment()),
+              );
             }
           },
           itemBuilder: (_) => [

@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:233016312296:android:9b70a4a07be14a8714245d",
+        "mobilesdk_app_id": "1:233016312296:android:8cc160ebc103abd414245d",
         "android_client_info": {
-          "package_name": "com.example.rsms"
+          "package_name": "com.cs.rerm"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "233016312296-6t1hfo38si1m3hrcmfcf7rbe8dmua8q2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.rsms",
-            "certificate_hash": "e5b5d796bc8c884af089d5f705cee8140b8e9e9e"
-          }
-        },
         {
           "client_id": "233016312296-4q5jhn9g9uk0k8f1ugcanm81cef4o0i9.apps.googleusercontent.com",
           "client_type": 3
