@@ -106,6 +106,8 @@ class _PostAdState extends State<PostAd> {
         final url = await ref.getDownloadURL();
         image12.add(url);
       }
+    } else {
+      return;
     }
     print(image12);
 

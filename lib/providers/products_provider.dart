@@ -22,6 +22,7 @@ class ad with ChangeNotifier {
   bool? owned = false;
   List? rating = [];
   List? agreement;
+  List agree = [];
 
   var adid;
   List<ad> _items = [];
@@ -387,6 +388,34 @@ class ad with ChangeNotifier {
       } catch (e) {
         throw (e);
       }
+    }).then((value) async {
+      const uri1 =
+          'https://rsms-3e512-default-rtdb.firebaseio.com/Agreements.json';
+      final url1 = Uri.parse(uri1);
+      try {
+        final response = await http.get(url1);
+        var extractedData = json.decode(response.body);
+        if (extractedData == null) {
+          return;
+        }
+        extractedData = extractedData as Map<String, dynamic>;
+        final List<Map> list = [];
+        extractedData.forEach((key, doc) {
+          list.add({
+            "id": key,
+            "renterId": doc['renterId'],
+            "renteeId": doc['renteeId'],
+            "url": doc['url']
+          });
+        });
+        agree = list
+            .where((element) => element['renteeId'] == existingProduct.uid)
+            .toList();
+      } catch (e) {}
+    }).then((value) async {
+      final url3 =
+          'https://rsms-3e512-default-rtdb.firebaseio.com/Agreements/${agree[0]['id']}.json';
+      final response = await http.delete(Uri.parse(url3));
     });
     if (response.statusCode >= 400) {
       _filtered.insert(existingProductIndex, existingProduct);
