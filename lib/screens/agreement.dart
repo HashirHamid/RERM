@@ -10,14 +10,20 @@ class Agreement extends StatefulWidget {
 
 class _AgreementState extends State<Agreement> {
   String? image;
-
-  getImage(context) {
+  var _isLoading = true;
+  getImage() {
     image = Provider.of<ad>(context, listen: false).image1;
   }
 
   @override
   void initState() {
-    getImage(context);
+    Provider.of<ad>(context, listen: false).getAgreement().then((value) {
+      getImage();
+      setState(() {
+        _isLoading = false;
+      });
+    });
+
     super.initState();
   }
 
@@ -25,7 +31,16 @@ class _AgreementState extends State<Agreement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Agreement')),
-      body: Center(child: Image.network(image.toString())),
+      body: Center(
+          child: _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : image.toString() == ''
+                  ? Center(
+                      child: Text('No agreement to show'),
+                    )
+                  : Image.network(image.toString())),
     );
   }
 }

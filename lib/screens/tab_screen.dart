@@ -104,11 +104,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   ),
                   CurvedNavigationBarItem(
                     child: Icon(
-                      Icons.settings,
+                      Icons.miscellaneous_services,
                       size: 30,
                       color: Colors.white,
                     ),
-                    label: "My Receipt",
+                    label: "Account",
                     labelStyle: TextStyle(
                       color: Colors.white,
                     ),

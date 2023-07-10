@@ -37,7 +37,7 @@ class InspectionReport extends StatelessWidget {
                   barW: barWidth,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 35,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +49,7 @@ class InspectionReport extends StatelessWidget {
                   barW: barWidth,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 35,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,7 +61,7 @@ class InspectionReport extends StatelessWidget {
                   barW: barWidth,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 35,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,13 +72,57 @@ class InspectionReport extends StatelessWidget {
                   barH: barHeight,
                   barW: barWidth,
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                          onPressed: () {}, child: Text("View ad"))),
-                )
+                SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text("WaterSupply:"), Text('${Report.water!}%')],
+                ),
+                HorizontalBar(
+                  number: Report.tilework,
+                  barH: barHeight,
+                  barW: barWidth,
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Electricity:"),
+                    Text('${Report.electricity!}%')
+                  ],
+                ),
+                HorizontalBar(
+                  number: Report.tilework,
+                  barH: barHeight,
+                  barW: barWidth,
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text("Severage:"), Text('${Report.severage!}%')],
+                ),
+                HorizontalBar(
+                  number: Report.tilework,
+                  barH: barHeight,
+                  barW: barWidth,
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text("Paint:"), Text('${Report.paint!}%')],
+                ),
+                HorizontalBar(
+                  number: Report.tilework,
+                  barH: barHeight,
+                  barW: barWidth,
+                ),
               ],
             ),
           ),

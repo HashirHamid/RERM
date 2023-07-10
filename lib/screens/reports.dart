@@ -70,12 +70,12 @@ class _ReportsState extends State<Reports> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => InspectionReport(
-                                        Ad: ads[i], Report: reports1[i])));
+                                        Ad: ads1[i], Report: reports1[i])));
                           },
                           child: ReportItem(
-                              ads[i].description.toString(),
-                              ads[i].title.toString(),
-                              ads[i].image![0].toString()),
+                              ads1[i].description.toString(),
+                              ads1[i].title.toString(),
+                              ads1[i].image![0].toString()),
                         ))));
   }
 }

@@ -45,6 +45,7 @@ class Auth with ChangeNotifier {
   Future<void> _authenticate(
       String email, String password, String url1, bool flag) async {
     final url = url1;
+    _rentee = flag;
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -60,6 +61,70 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+      print(flag);
+      if (flag) {
+        const uri =
+            'https://rsms-3e512-default-rtdb.firebaseio.com/rentee.json';
+        final url = Uri.parse(uri);
+        try {
+          final response = await http.get(url);
+          var extractedData = json.decode(response.body);
+          if (extractedData == null) {
+            return;
+          }
+          extractedData = extractedData as Map<String, dynamic>;
+          List list = [];
+          extractedData.forEach((key, doc) {
+            list.add({
+              'id': doc['id'],
+              'cnic': doc['cnic'],
+              'number': doc['number'],
+              'owned': doc['owned'],
+              'password': doc['password'],
+              'email': doc['email']
+            });
+          });
+          list = list
+              .where((element) => element['id'] == responseData['localId'])
+              .toList();
+          if (list == []) {
+            throw HttpException('Not a rentee');
+          }
+        } catch (e) {
+          throw e;
+        }
+      } else {
+        const uri =
+            'https://rsms-3e512-default-rtdb.firebaseio.com/renter.json';
+        final url = Uri.parse(uri);
+        try {
+          final response = await http.get(url);
+          var extractedData = json.decode(response.body);
+          if (extractedData == null) {
+            return;
+          }
+          extractedData = extractedData as Map<String, dynamic>;
+          List list = [];
+          extractedData.forEach((key, doc) {
+            list.add({
+              'id': doc['id'],
+              'cnic': doc['cnic'],
+              'number': doc['number'],
+              'password': doc['password'],
+              'email': doc['email']
+            });
+          });
+          list = list
+              .where((element) => element['id'] == responseData['localId'])
+              .toList();
+          if (list == []) {
+            throw HttpException('Not a renter');
+          }
+        } catch (e) {
+          throw e;
+        }
+      }
+
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
@@ -72,7 +137,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> addRentee(email, password, cnic, number) async {
+  Future<void> addRentee(email, password, cnic, number, id) async {
     final url = 'https://rsms-3e512-default-rtdb.firebaseio.com/rentee.json';
     try {
       final response = await http.post(
@@ -81,7 +146,7 @@ class Auth with ChangeNotifier {
           'email': email,
           'password': password,
           'cnic': cnic,
-          'id': this.userId,
+          'id': id,
           'number': number,
           'owned': false
         }),
@@ -93,7 +158,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> addRenter(email, password, cnic, number) async {
+  Future<void> addRenter(email, password, cnic, number, id) async {
     final url = 'https://rsms-3e512-default-rtdb.firebaseio.com/renter.json';
     try {
       final response = await http.post(
@@ -103,7 +168,7 @@ class Auth with ChangeNotifier {
           'password': password,
           'cnic': cnic,
           'number': number,
-          'id': userId,
+          'id': id,
         }),
       );
       notifyListeners();
@@ -114,7 +179,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signup(Map<String, String> authData, bool r) async {
-    this._rentee = r;
+    _rentee = r;
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD8oOkQxggXGAu3ECh5TfCd8hRXmlQ8NEE';
     try {
@@ -128,16 +193,17 @@ class Auth with ChangeNotifier {
           },
         ),
       );
-      if (r) {
-        await addRentee(authData['email'], authData['password'],
-            authData['cnic'], authData['number']);
-      } else {
-        await addRenter(authData['email'], authData['password'],
-            authData['cnic'], authData['number']);
-      }
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
+      }
+
+      if (r) {
+        await addRentee(authData['email'], authData['password'],
+            authData['cnic'], authData['number'], responseData['localId']);
+      } else {
+        await addRenter(authData['email'], authData['password'],
+            authData['cnic'], authData['number'], responseData['localId']);
       }
 
       _token = responseData['idToken'];
@@ -145,7 +211,6 @@ class Auth with ChangeNotifier {
       _expiryDate = DateTime.now().add(
         Duration(seconds: int.parse(responseData['expiresIn'])),
       );
-      print("Hello");
       notifyListeners();
     } catch (e) {
       throw e;
@@ -153,12 +218,12 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> login(String email, String password, bool r) async {
-    this._rentee = r;
+    _rentee = r;
     return _authenticate(
         email,
         password,
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD8oOkQxggXGAu3ECh5TfCd8hRXmlQ8NEE',
-        true);
+        r);
   }
 
   void logout() {

@@ -21,7 +21,7 @@ class ad with ChangeNotifier {
   String? type;
   bool? owned = false;
   List? rating = [];
-  List? agreement = [];
+  List? agreement;
 
   var adid;
   List<ad> _items = [];
@@ -100,7 +100,8 @@ class ad with ChangeNotifier {
   }
 
   String get image1 {
-    return this.agreement![0]['image'];
+    print(agreement);
+    return agreement == null ? '' : agreement![0]['url'];
   }
 
   ad findById(String id) {
@@ -174,7 +175,8 @@ class ad with ChangeNotifier {
   }
 
   Future<void> getAgreement() async {
-    const uri = 'https://rsms-3e512-default-rtdb.firebaseio.com/Agreement.json';
+    const uri =
+        'https://rsms-3e512-default-rtdb.firebaseio.com/Agreements.json';
     final url = Uri.parse(uri);
     try {
       final response = await http.get(url);
@@ -191,12 +193,15 @@ class ad with ChangeNotifier {
           'renterId': doc['renterId']
         });
       });
-      list = list.firstWhere(
-        (element) =>
-            element['renteeId'] == this.userId ||
-            element['renterId'] == this.userId,
-      );
+      list = list
+          .where(
+            (element) =>
+                element['renteeId'] == this.userId ||
+                element['renterId'] == this.userId,
+          )
+          .toList();
       this.agreement = list;
+      print(agreement);
 
       notifyListeners();
     } catch (e) {

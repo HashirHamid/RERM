@@ -90,25 +90,6 @@ class ProductDetailScreen extends StatelessWidget {
                         SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on_outlined,
-                              size: 30,
-                              color: Colors.blue.shade900,
-                            ),
-                            Text(
-                              products.location.toString(),
-                              style: TextStyle(
-                                color: Colors.blue.shade900,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 6,
-                        ),
                         Divider(),
                         Text(
                           'Details',
@@ -120,12 +101,24 @@ class ProductDetailScreen extends StatelessWidget {
                         SizedBox(
                           height: 4,
                         ),
-                        Text(
-                          "Type",
-                          style: TextStyle(
-                            color: Colors.blue.shade900,
-                            fontSize: 20,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Type",
+                              style: TextStyle(
+                                color: Colors.blue.shade900,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              "Rent",
+                              style: TextStyle(
+                                  color: Colors.blue.shade900,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 8,
@@ -187,23 +180,26 @@ class ProductDetailScreen extends StatelessWidget {
                     Divider(
                       height: 2,
                     ),
-                    TextButton(
-                        onPressed: () async {
-                          await Provider.of<report>(context, listen: false)
-                              .request(
-                                  products.title.toString(),
-                                  products.description.toString(),
-                                  products.id.toString());
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content:
-                                Text("A request for inspection has been sent!"),
-                          ));
-                        },
-                        child: Text(
-                          '  Request \nInspection',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        )),
+                    flag
+                        ? Container()
+                        : TextButton(
+                            onPressed: () async {
+                              await Provider.of<report>(context, listen: false)
+                                  .request(
+                                      products.title.toString(),
+                                      products.description.toString(),
+                                      products.id.toString());
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text(
+                                    "A request for inspection has been sent!"),
+                              ));
+                            },
+                            child: Text(
+                              '  Request \nInspection',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            )),
                   ]),
             ),
           )
